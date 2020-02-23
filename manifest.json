@@ -1,21 +1,22 @@
 {
   "manifest_version": 2,
-  "name": "Yet Another Bitcoin Price Ticker",
-  "short_name": "YABPT",
-  "version": "1.5.3",
-  "description": "__MSG_extensionDescription__",
+  "name": "Crypto Currency Price Ticker",
+  "short_name": "CCPT",
+  "version": "1.0.1",
+  "description": "Crypto Currency Price Ticker",
   "icons": {
-    "16": "icons/icon-16.png",
-    "32": "icons/icon-32.png",
-    "48": "icons/icon-48.png",
-    "64": "icons/icon-64.png",
-    "128": "icons/icon-128.png"
+    "16": "icons/icon.svg",
+    "32": "icons/icon.svg",
+    "48": "icons/icon.svg",
+    "64": "icons/icon.svg",
+    "128": "icons/icon.svg"
   },
 
   "browser_action": {
-    "default_icon": "icons/icon-48.png",
-    "default_title": "Yet Another Bitcoin Price Ticker",
-    "browser_style": true
+    "default_icon": "icons/icon.svg",
+    "default_title": "Crypto Currency Price Ticker",
+    "browser_style": true,
+    "default_popup": "popup/choose_symbol.html"
   },
 
   "background": {
@@ -27,7 +28,7 @@
   "permissions": [
     "storage",
     "tabs",
-    "https://blockchain.info/ticker"
+    "https://api.huobi.pro/market/detail"
   ],
 
   "options_ui": {
@@ -39,7 +40,7 @@
 
   "applications": {
     "gecko": {
-      "id": "jid1-BYl3kts609WbCw@jetpack"
+      "id": "wangsai.silence@qq.com"
     }
   }
 }

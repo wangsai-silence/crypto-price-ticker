@@ -14,5 +14,8 @@
   "devDependencies": {
     "eslint": "^4.10.0",
     "web-ext": "^2.2.2"
+  },
+  "dependencies": {
+    "request": "^2.88.2"
   }
 }

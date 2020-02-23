@@ -1,10 +1,10 @@
 {
   "badgeTooltip": {
-    "message": "1 bitcoin is worth $1 today",
+    "message": "To Da Moon",
     "description": "Text that shows up when the mouse is hovering over the add-on's button in the browser's toolbar."
   },
   "extensionDescription": {
-    "message": "A simple bitcoin price ticker, powered by Blockchain.info.",
+    "message": "A simple huobi token price ticker, powered by Huobi.Co.",
     "description": "Description of the add-on."
   },
   "optionsHeader": {
