@@ -2,18 +2,18 @@
   "manifest_version": 2,
   "name": "Crypto Currency Price Ticker",
   "short_name": "CCPT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Crypto Currency Price Ticker",
   "icons": {
-    "16": "icons/icon.svg",
-    "32": "icons/icon.svg",
-    "48": "icons/icon.svg",
-    "64": "icons/icon.svg",
-    "128": "icons/icon.svg"
+    "16": "icons/icon_16.png",
+    "32": "icons/icon_32.png",
+    "48": "icons/icon_48.png",
+    "64": "icons/icon_64.png",
+    "128": "icons/icon_128.png"
   },
 
   "browser_action": {
-    "default_icon": "icons/icon.svg",
+    "default_icon": "icons/icon_128.png",
     "default_title": "Crypto Currency Price Ticker",
     "browser_style": true,
     "default_popup": "popup/choose_symbol.html"
@@ -27,14 +27,8 @@
 
   "permissions": [
     "storage",
-    "tabs",
     "https://api.huobi.pro/market/detail"
   ],
-
-  "options_ui": {
-    "page": "options/options.html",
-    "chrome_style": false
-  },
 
   "default_locale": "en_US",
 
