@@ -1,6 +1,6 @@
 # ccpt  
 
-ccpt is a browser extension that displays the current price of various kinds of crypto currencies. It's nice, elegant, clean and simple. Powered by [Huobi.Co](https://huobi.com).
+ccpt is a browser extension that displays the current price of various kinds of crypto currencies. It's nice, elegant, clean and simple.
 
 ## Download
 - [Firefox Marketplace](https://addons.mozilla.org/zh-CN/firefox/addon/crypto-currency-price-ticker/)
