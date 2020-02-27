@@ -1,16 +1,16 @@
 (function(globalObject) {
     const ok = {};
 
-    ok.getAllSymbols = function () {
-        return fetch('https://www.okex.com/api/spot/v3/instruments').
+    ok.getAllSymbols = function() {
+        return fetch('http://www.wangsai.xyz:4040/getAllSymbols?exchange=ok').
                then((respones) => respones.json()).
-               then((data) => data.map((a) => a.instrument_id).sort());
+               then((data) => data.data);
     };
 
     ok.getPrice = function (symbol) {
-            return fetch(`https://www.okex.com/api/spot/v3/instruments/${symbol}/ticker`).
+            return fetch(`http://www.wangsai.xyz:4040/getPrice?exchange=ok&symbol=${symbol}`).
                     then((respones) => respones.json()).
-                    then((data) => data.last);
+                    then((data) => data.data);
     };
 
     if (!globalObject) {

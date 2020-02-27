@@ -3,6 +3,12 @@ import rp from 'request-promise'
 
 const server = express()
 
+
+server.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
+
 server.get('/getAllSymbols', (request, response) => {
     const exchange = request.query.exchange
     if(exchange == undefined){
@@ -22,10 +28,13 @@ server.get('/getAllSymbols', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
 
             return
         case "bn":
@@ -36,10 +45,13 @@ server.get('/getAllSymbols', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
 
                return
         case "ok":
@@ -50,10 +62,13 @@ server.get('/getAllSymbols', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
 
                return
         default:
@@ -85,10 +100,14 @@ server.get('/getPrice', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
+
             return
         case "bn":
             rp.get(`https://api.binance.com/api/v1/trades?symbol=${symbol}&limit=1`)
@@ -98,10 +117,13 @@ server.get('/getPrice', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
 
             return
         case "ok":
@@ -112,10 +134,13 @@ server.get('/getPrice', (request, response) => {
                     isErr: false,
                     data: data
                 }))
-                .catch(err => response.send({
+                .catch(err => {
+                    console.log(err)
+                    response.send({
                     isErr: true,
                     errMsg: err
-                }))
+                     })
+                })
 
             return
         default:

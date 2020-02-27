@@ -32,9 +32,7 @@
 
   "permissions": [
     "storage",
-    "https://api.huobi.pro/market/detail",
-    "https://www.okex.com/api",
-    "https://api.binance.com/api"
+    "http://www.wangsai.xyz:4000"
   ],
 
   "default_locale": "en_US",

@@ -1,16 +1,24 @@
 (function(globalObject) {
     const huobi = {};
 
+    const header = new Headers({
+        'Access-Control-Allow-Origin': '*'
+    });
+
     huobi.getAllSymbols = function() {
-        return fetch('https://api.huobi.pro/v1/common/symbols').
+        return fetch('http://www.wangsai.xyz:4040/getAllSymbols?exchange=huobi', {
+            method: 'GET',
+            headers: header,
+            mode: 'cors'
+        }).
                then((respones) => respones.json()).
-               then((data) => data.data.filter((a) => a.state === 'online').map((a) => a.symbol).sort());
+               then((data) => data.data);
     };
 
     huobi.getPrice = function (symbol) {
-            return fetch(`https://api.huobi.pro/market/detail?symbol=${symbol}`).
+            return fetch(`http://www.wangsai.xyz:4040/getPrice?exchange=huobi&symbol=${symbol}`).
                     then((respones) => respones.json()).
-                    then((data) => data.tick.close);
+                    then((data) => data.data);
     };
 
     if (!globalObject) {
