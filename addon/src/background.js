@@ -6,7 +6,7 @@
     const storage = globalObject.storage;
     const api = globalObject.exchanges;
 
-    let current = 'htusdt';
+    let current;
 
     // Formats the price into currency suffixes
     function formatPrice(price) {
@@ -91,7 +91,7 @@
     function setupStorage() {
         chrome.storage.onChanged.addListener(onStorageChanged);
         storage.updateExchange('Huobi');
-        storage.updateExchangeSymbol('Huobi', 'htbtc');
+        storage.updateExchangeSymbol('Huobi', 'btcusdt');
     }
 
     function onStorageChanged() {

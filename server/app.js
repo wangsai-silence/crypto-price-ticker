@@ -6,6 +6,29 @@ const server = express()
 
 server.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
+    console.log(`request query: ${req.query}`)
+    console.log(`request header: ${req.rawHeaders}`)
+
+    var oldWrite = res.write,
+    oldEnd = res.end;
+
+    var chunks = [];
+
+    res.write = function (chunk) {
+    chunks.push(chunk);
+
+    oldWrite.apply(res, arguments);
+    };
+
+    res.end = function (chunk) {
+    if (chunk)
+        chunks.push(chunk);
+
+    var body = Buffer.concat(chunks).toString('utf8');
+    console.log('response:', req.path, body);
+
+    oldEnd.apply(res, arguments);
+    };
     next();
 });
 

@@ -14,19 +14,6 @@
     };
 
 
-    binance.getAllSymbols = function () {
-        return fetch('https://api.binance.com/api/v1/exchangeInfo').
-               then((respones) => respones.json()).
-               then((data) => data.symbols.filter((a) => a.status == 'TRADING').map((a) => a.symbol).sort());
-    };
-
-    binance.getPrice = function (symbol) {
-            return fetch(`https://api.binance.com/api/v1/trades?symbol=${symbol}&limit=1`).
-                    then((respones) => respones.json()).
-                    // then(console.log).
-                    then((data) => data[0].price);
-    };
-
     if (!globalObject) {
       globalObject = typeof self != 'undefined' && self ? self : window;
     }
