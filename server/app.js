@@ -124,9 +124,6 @@ server.get('/getPrice', (request, response) => {
                 errMsg: `exchange ${exchange} is not supported`
             })
     }
-
-    console.log(request.query)
-    response.send('getPrice请求成功')
 })
 
 //4. 绑定端口
