@@ -1,16 +1,8 @@
 (function(globalObject) {
     const huobi = {};
 
-    const header = new Headers({
-        'Access-Control-Allow-Origin': '*'
-    });
-
     huobi.getAllSymbols = function() {
-        return fetch('http://www.wangsai.xyz:4040/getAllSymbols?exchange=huobi', {
-            method: 'GET',
-            headers: header,
-            mode: 'cors'
-        }).
+        return fetch('http://www.wangsai.xyz:4040/getAllSymbols?exchange=huobi').
                then((respones) => respones.json()).
                then((data) => data.data);
     };

@@ -32,7 +32,7 @@
 
   "permissions": [
     "storage",
-    "http://www.wangsai.xyz:4000"
+    "*://www.wangsai.xyz:*/*"
   ],
 
   "default_locale": "en_US",

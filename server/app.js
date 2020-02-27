@@ -37,7 +37,7 @@ server.get('/getAllSymbols', (request, response) => {
                 })
 
             return
-        case "bn":
+        case "binance":
             rp.get('https://api.binance.com/api/v1/exchangeInfo')
                 .then(JSON.parse)
                 .then((data) => data.symbols.filter((a) => a.status == 'TRADING').map((a) => a.symbol).sort())
@@ -91,6 +91,14 @@ server.get('/getPrice', (request, response) => {
         return
     }
 
+    if(symbol == undefined) {
+        response.send({
+            isErr: true,
+            errMsg: 'no symbol in params'
+        })
+        return
+    }
+
     switch(exchange) {
         case "huobi":
             rp.get(`https://api.huobi.pro/market/detail?symbol=${symbol}`)
@@ -109,7 +117,7 @@ server.get('/getPrice', (request, response) => {
                 })
 
             return
-        case "bn":
+        case "binance":
             rp.get(`https://api.binance.com/api/v1/trades?symbol=${symbol}&limit=1`)
                 .then(JSON.parse)
                 .then((data) => data[0].price)
