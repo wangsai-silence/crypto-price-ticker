@@ -1,6 +1,6 @@
 *.xpi
 Thumbs.db
-web-ext-artifacts/*
+*/web-ext-artifacts/*
 *.zip
 npm-debug.log
-node_modules/
+*/node_modules/

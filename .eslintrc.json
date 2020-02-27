@@ -44,6 +44,7 @@
             "error",
             "never"
         ],
+        "no-console":"off",
         "consistent-return": "off",
         "consistent-this": "error",
         "curly": "error",

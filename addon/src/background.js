@@ -1,8 +1,12 @@
+
 /* eslint-disable no-unused-vars, no-mixed-operators */
-(function () {
+(function (globalObject) {
     // Easy access to settings
-    const symbols = 'btcusdt,hbusdt';
-    let current = 'htusdt';
+
+    const storage = globalObject.storage;
+    const api = globalObject.exchanges;
+
+    let current;
 
     // Formats the price into currency suffixes
     function formatPrice(price) {
@@ -35,7 +39,8 @@
             }
         }
 
-        price = price.toString();
+
+        price = new BigNumber(price).toString(10);
         if (price.startsWith("0.0")) {
             price = price.substring(3);
             while (price.startsWith("0")) {
@@ -48,6 +53,7 @@
     }
 
     function updateBadgeText(price) {
+        console.log(price);
         var badgeText = formatPrice(price);
 
         chrome.browserAction.setBadgeText({
@@ -58,23 +64,6 @@
             title: "To Da Moon"
         });
     }
-
-    function getAllSymbols() {
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = "text";
-        xhr.open("GET", "https://api.huobi.pro/v1/common/symbols", true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const infos = JSON.parse(xhr.responseText).data.filter((a) => a.state === 'online').map((a) => a.symbol);
-
-                chrome.storage.local.set({
-                        symbols: infos.join(',')
-                    });
-            }
-        };
-        xhr.send();
-    }
-
 
     function setupInterval() {
         window.setInterval(function () {
@@ -100,20 +89,17 @@
     }
 
     function setupStorage() {
-        chrome.storage.local.get(['symbols'], function (prefs) {
-            if (prefs.symbols === undefined) {
-                chrome.storage.local.set({
-                    symbols: symbols,
-                    current: current
-                });
-            }
-        });
         chrome.storage.onChanged.addListener(onStorageChanged);
+        storage.updateExchange('Huobi');
+        storage.updateExchangeSymbol('htbtc');
     }
 
     function onStorageChanged() {
-        chrome.storage.local.get(['current'], function (prefs) {
-            current = prefs.current;
+
+        storage.getExchange().
+        then((ex) => storage.getExchangeSymbol(ex)).
+        then((symbol) => {
+            current = symbol;
             updateBadge();
         });
     }
@@ -122,23 +108,12 @@
         const symbol = current;
         console.log(`symbol is: ${symbol}`);
 
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = "text";
-        xhr.open("GET", `https://api.huobi.pro/market/detail?symbol=${symbol}`, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var response = JSON.parse(xhr.responseText);
-                var price = response.tick.close;
-
-                updateBadgeText(price);
-            }
-        };
-        xhr.send();
+        storage.getExchange().
+        then((ex) => api[ex].getPrice(symbol)).
+        then((price) => updateBadgeText(price));
     }
 
     setupBadge();
     setupStorage();
-    getAllSymbols();
     setupInterval();
-
-})();
+})(this);

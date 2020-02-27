@@ -16,6 +16,6 @@
     "web-ext": "^2.2.2"
   },
   "dependencies": {
-    "request": "^2.88.2"
+    "bignumber.js": "^9.0.0"
   }
 }
