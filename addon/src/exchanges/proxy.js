@@ -11,6 +11,10 @@
         {
             name: "Binance",
             symbol: "binance"
+        },
+        {
+            name: "Coinbase",
+            symbol: "coinbase"
         }
     ];
 
