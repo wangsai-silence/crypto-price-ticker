@@ -18,9 +18,9 @@ function getAllSymbols(response) {
 }
 
 function getPrice(response, symbol) {
-    return rp.get(`https://api.coinbase.com/v2/prices/${symbol}/spot`)
+    return rp.get(`https://api.pro.coinbase.com/products/${symbol}/ticker`)
                 .then(JSON.parse)
-                .then(data => data.data.amount)
+                .then(data => data.amount)
                 .then(data => response.send({
                     isErr: false,
                     data: data
