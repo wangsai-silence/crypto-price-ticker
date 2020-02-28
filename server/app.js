@@ -2,13 +2,15 @@ import express from 'express'
 import huobi from './exchange/huobi'
 import ok from './exchange/ok'
 import binance from './exchange/binance'
+import coinbase from './exchange/coinbase'
 
 const server = express()
 
 let exchanges = {
     huobi,
     ok,
-    binance
+    binance,
+    coinbase
 } 
 
 
