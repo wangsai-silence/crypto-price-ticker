@@ -2,13 +2,13 @@
     const ok = {};
 
     ok.getAllSymbols = function() {
-        return fetch('http://www.wangsai.xyz:4040/getAllSymbols?exchange=ok').
+        return fetch('http://127.0.0.1:4040/getAllSymbols?exchange=ok').
                then((respones) => respones.json()).
                then((data) => data.data);
     };
 
     ok.getPrice = function (symbol) {
-            return fetch(`http://www.wangsai.xyz:4040/getPrice?exchange=ok&symbol=${symbol}`).
+            return fetch(`http://127.0.0.1:4040/getPrice?exchange=ok&symbol=${symbol}`).
                     then((respones) => respones.json()).
                     then((data) => data.data);
     };
