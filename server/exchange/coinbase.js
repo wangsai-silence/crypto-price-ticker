@@ -28,7 +28,7 @@ function getPrice(response, symbol) {
         }
     })
                 .then(JSON.parse)
-                .then(data => data.amount)
+                .then(data => data.price)
                 .then(data => response.send({
                     isErr: false,
                     data: data
