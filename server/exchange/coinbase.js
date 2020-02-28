@@ -1,7 +1,11 @@
 import rp from 'request-promise'
 
 function getAllSymbols(response) {
-    return rp.get('https://api.pro.coinbase.com/products').
+    return rp.get('https://api.pro.coinbase.com/products',{
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
+        }
+    }).
                 then(JSON.parse).
                 then((data) => data.map((a) => a.id).sort()).
                 then((data) => response.send({
@@ -18,7 +22,11 @@ function getAllSymbols(response) {
 }
 
 function getPrice(response, symbol) {
-    return rp.get(`https://api.pro.coinbase.com/products/${symbol}/ticker`)
+    return rp.get(`https://api.pro.coinbase.com/products/${symbol}/ticker`, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
+        }
+    })
                 .then(JSON.parse)
                 .then(data => data.amount)
                 .then(data => response.send({
