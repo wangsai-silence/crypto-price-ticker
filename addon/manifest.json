@@ -22,9 +22,7 @@
   "background": {
     "scripts": [
       "src/libs/bignumber.min.js",
-      "src/exchanges/huobi.js",
-      "src/exchanges/bn.js",
-      "src/exchanges/ok.js",
+      "src/exchanges/proxy.js",
       "src/storage.js",
       "src/background.js"
     ]
@@ -32,7 +30,7 @@
 
   "permissions": [
     "storage",
-    "*://www.wangsai.xyz:*/*"
+    "http://www.wangsai.xyz:4040"
   ],
 
   "default_locale": "en_US",
