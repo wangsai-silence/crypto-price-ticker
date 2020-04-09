@@ -61,7 +61,7 @@
         });
 
         chrome.browserAction.setTitle({
-            title: "To Da Moon"
+            title: String(price)
         });
     }
 
@@ -90,12 +90,14 @@
 
     function setupStorage() {
         chrome.storage.onChanged.addListener(onStorageChanged);
+        window.setTimeout(() => {
+
         storage.updateExchange('Huobi');
         storage.updateExchangeSymbol('Huobi', 'btcusdt');
+        }, 100);
     }
 
     function onStorageChanged() {
-
         storage.getExchange().
         then((ex) => storage.getExchangeSymbol(ex)).
         then((symbol) => {
