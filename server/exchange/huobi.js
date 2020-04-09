@@ -1,37 +1,15 @@
 import rp from 'request-promise'
 
-function getAllSymbols(response) {
+function getAllSymbols() {
     return rp.get('https://api.huobi.pro/v1/common/symbols').
                 then(JSON.parse).
-                then((data) => data.data.filter((a) => a.state === 'online').map((a) => a.symbol).sort()).
-                then((data) => response.send({
-                    isErr: false,
-                    data: data
-                })).
-                catch((err) => {
-                    console.log(err);
-                    response.send({
-                    isErr: true,
-                    errMsg: err
-                     });
-                });
+                then((data) => data.data.filter((a) => a.state === 'online').map((a) => a.symbol).sort())
 }
 
-function getPrice(response, symbol) {
+function getPrice(symbol) {
     return rp.get(`https://api.huobi.pro/market/detail?symbol=${symbol}`)
                 .then(JSON.parse)
                 .then(data => data.tick.close)
-                .then(data => response.send({
-                    isErr: false,
-                    data: data
-                }))
-                .catch(err => {
-                    console.log(err)
-                    response.send({
-                    isErr: true,
-                    errMsg: err
-                     })
-                })
 }
 
 module.exports = {

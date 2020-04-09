@@ -61,9 +61,25 @@ server.get('/getAllSymbols', (request, response) => {
     }
 
     exchanges[exchange].getAllSymbols(response)
+    .then((data) => response.send({
+                    isErr: false,
+                    data: data
+                })).
+                catch((err) => {
+                    console.log(err);
+                    response.send({
+                    isErr: true,
+                    errMsg: err
+                     });
+                });
 })
 
+//exchange symbol price time
+let cache = new Map()
+const maxLifeTime = 3
+
 server.get('/getPrice', (request, response) => {
+
     const exchange = request.query.exchange
     const symbol = request.query.symbol
 
@@ -91,7 +107,41 @@ server.get('/getPrice', (request, response) => {
         return
     }
 
-    exchanges[exchange].getPrice(response, symbol)
+    if (cache.has(exchange)) {
+        let info  = cache.get(exchange).get(symbol) 
+        let now = Date.now() / 1000
+        if (info && now - info.time < maxLifeTime) {
+            response.send({
+                isErr: false,
+                data: info.data
+            })
+            return 
+        }
+    }
+
+    exchanges[exchange].getPrice(symbol)
+    .then(data => {
+        if (!cache.has(exchange)) {
+            cache.set(exchange, new Map())
+        }
+
+        cache.get(exchange).set(symbol, {
+            data: data,
+            time: Date.now() / 1000
+        })
+
+        response.send({
+                    isErr: false,
+                    data: data
+                })
+            })
+    .catch(err => {
+        console.log(err)
+        response.send({
+        isErr: true,
+        errMsg: err
+            })
+    })
 })
 
 //4. 绑定端口
