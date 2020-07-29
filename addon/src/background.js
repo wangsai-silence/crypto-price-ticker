@@ -91,9 +91,27 @@
     function setupStorage() {
         chrome.storage.onChanged.addListener(onStorageChanged);
         window.setTimeout(() => {
+            storage.getExchange().then(ex => {
+                if(ex) {
+                    console.log(`current exchange is ${ex}`)
+                    return storage.getExchangeSymbol(ex)
+                }else {
+                    return Promise.reject('undefined exchange')
+                }
+            }).then(symbol => {
+                if(symbol) {
+                    console.log(`current symbol is ${symbol}`)
+                    current = symbol
+                    updateBadge()
+                }else {
+                    return Promise.reject('undefined symbol')
+                }
+            }).catch(err => {
+                console.error(err)
 
-        storage.updateExchange('Huobi');
-        storage.updateExchangeSymbol('Huobi', 'btcusdt');
+                storage.updateExchange('Huobi');
+                storage.updateExchangeSymbol('Huobi', 'btcusdt');
+            })
         }, 100);
     }
 
