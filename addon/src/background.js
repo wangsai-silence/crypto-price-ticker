@@ -27,15 +27,15 @@
 
 
                 // Finds the amount of digits the integer part has
-                var integerDigits = Math.floor(Math.log(intResult) * Math.LOG10E + 1);
-                switch (integerDigits) {
-                    case 1:
-                        return (Math.floor(10 * result) / 10).toFixed(1) + ranges[i].suffix;
-                    case 2:
-                    case 3:
-                    default:
-                        return Math.round(result) + ranges[i].suffix;
-                }
+                return (Math.floor(10 * result) / 10).toFixed(1) + ranges[i].suffix;
+                // var integerDigits = Math.floor(Math.log(intResult) * Math.LOG10E + 1);
+                // switch (integerDigits) {
+                //     case 1:
+                //     case 2:
+                //     case 3:
+                //     default:
+                //         return Math.round(result) + ranges[i].suffix;
+                // }
             }
         }
 
