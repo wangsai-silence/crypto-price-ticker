@@ -96,6 +96,12 @@
     });
 
     document.getElementById('_symbols').addEventListener('change', (event) => {
+        api[currExchange].getAllSymbols().
+        then((symbols) => {
+            storage.updateExchangeSymbols(currExchange, symbols);
+            updateSymbolsUI(symbols);
+        });
+
         const select = event.target;
         const opt = select.options[select.selectedIndex];
         console.log('current symbol change to:', opt.value);
