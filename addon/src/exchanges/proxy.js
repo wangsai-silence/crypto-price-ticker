@@ -25,12 +25,12 @@
     exchanges.forEach((ex) => {
         const api = {};
         api.getAllSymbols = function() {
-            return fetch(`http://www.wangsai.xyz:4040/getAllSymbols?exchange=${ex.symbol}`).
+            return fetch(`http://172.105.211.69:4040/getAllSymbols?exchange=${ex.symbol}`).
                 then((respones) => respones.json()).
                 then((data) => data.data);
         };
         api.getPrice = function (symbol) {
-            return fetch(`http://www.wangsai.xyz:4040/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
+            return fetch(`http://172.105.211.69:4040/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
                     then((respones) => respones.json()).
                     then((data) => data.data);
         };

@@ -30,7 +30,7 @@
 
   "permissions": [
     "storage",
-    "http://www.wangsai.xyz:4040"
+    "http://172.105.211.69:4040"
   ],
 
   "default_locale": "en_US",
