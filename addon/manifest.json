@@ -30,7 +30,7 @@
 
   "permissions": [
     "storage",
-    "http://172.105.211.69:4040"
+    "http://addons.wangsai.site"
   ],
 
   "default_locale": "en_US",

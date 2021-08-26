@@ -15,6 +15,10 @@
         {
             name: "Coinbase",
             symbol: "coinbase"
+        },
+        {
+            name: "Mxc",
+            symbol: "mxc"
         }
     ];
 
