@@ -1,4 +1,4 @@
-import rp from 'request-promise'
+const rp = require('request-promise')
 
 function getAllSymbols() {
     return rp.get('https://api.huobi.pro/v1/common/symbols').
