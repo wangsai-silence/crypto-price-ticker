@@ -4,6 +4,7 @@ const ok = require('./exchange/ok');
 const binance = require('./exchange/binance');
 const coinbase = require('./exchange/coinbase');
 const mxc = require('./exchange/mxc');
+const ftx = require('./exchange/ftx');
 
 const server = express();
 
@@ -12,7 +13,8 @@ const exchanges = {
     ok,
     binance,
     coinbase,
-    mxc
+    mxc,
+    ftx
 };
 
 
