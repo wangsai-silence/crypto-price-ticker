@@ -17,7 +17,7 @@
             symbol: "coinbase"
         },
         {
-            name: "Ftx",
+            name: "FTX",
             symbol: "ftx"
         },
         {
