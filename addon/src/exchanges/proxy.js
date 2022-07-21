@@ -21,8 +21,12 @@
             symbol: "ftx"
         },
         {
-            name: "Mxc",
+            name: "MXC",
             symbol: "mxc"
+        },
+        {
+            name: "Bybit",
+            symbol: "bybit"
         }
     ];
 
