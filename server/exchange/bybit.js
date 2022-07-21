@@ -9,7 +9,7 @@ function getAllSymbols() {
 function getPrice(symbol) {
     return rp.get(`https://api.bybit.com/spot/quote/v1/ticker/price?symbol=${symbol}`)
                 .then(JSON.parse)
-                .then(data => data.result.pric)
+                .then(data => data.result.price)
 }
 
 module.exports = {
