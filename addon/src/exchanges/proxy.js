@@ -27,7 +27,11 @@
         {
             name: "Bybit",
             symbol: "bybit"
-        }
+        },
+        {
+            name: "Kucoin",
+            symbol: "kucoin"
+        },
     ];
 
     if (globalObject.exchanges === undefined) {
