@@ -6,6 +6,7 @@ const coinbase = require('./exchange/coinbase');
 const mxc = require('./exchange/mxc');
 const ftx = require('./exchange/ftx');
 const bybit = require('./exchange/bybit');
+const kucoin = require('./exchange/kucoin');
 
 const server = express();
 
@@ -16,7 +17,8 @@ const exchanges = {
     coinbase,
     mxc,
     ftx,
-    bybit
+    bybit,
+    kucoin
 };
 
 
@@ -97,10 +99,10 @@ server.get('/getPrice', (request, response) => {
         return;
     }
 
-    if (exchange == undefined) {
+    if (exchanges[exchange] === undefined) {
         response.send({
             isErr: true,
-            errMsg: 'no exchange in params'
+            errMsg: 'exchange not supported'
         });
         return;
     }
