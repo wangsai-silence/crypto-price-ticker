@@ -41,12 +41,12 @@
     exchanges.forEach((ex) => {
         const api = {};
         api.getAllSymbols = function() {
-            return fetch(`https://addons.wangsai.site/getAllSymbols?exchange=${ex.symbol}`).
+            return fetch(`https://addons.wangsai.cloud/getAllSymbols?exchange=${ex.symbol}`).
                 then((respones) => respones.json()).
                 then((data) => data.data);
         };
         api.getPrice = function (symbol) {
-            return fetch(`https://addons.wangsai.site/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
+            return fetch(`https://addons.wangsai.cloud/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
                     then((respones) => respones.json()).
                     then((data) => data.data);
         };
