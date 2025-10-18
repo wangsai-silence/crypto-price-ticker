@@ -1,4 +1,4 @@
-(function(globalObject) {
+(function (globalObject) {
     const exchanges = [
         {
             name: "Huobi",
@@ -31,7 +31,7 @@
         {
             name: "Kucoin",
             symbol: "kucoin"
-        },
+        }
     ];
 
     if (globalObject.exchanges === undefined) {
@@ -40,15 +40,15 @@
 
     exchanges.forEach((ex) => {
         const api = {};
-        api.getAllSymbols = function() {
-            return fetch(`https://addons.wangsai.cloud/getAllSymbols?exchange=${ex.symbol}`).
+        api.getAllSymbols = function () {
+            return fetch(`https://addons.willwang.cloud/getAllSymbols?exchange=${ex.symbol}`).
                 then((respones) => respones.json()).
                 then((data) => data.data);
         };
         api.getPrice = function (symbol) {
-            return fetch(`https://addons.wangsai.cloud/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
-                    then((respones) => respones.json()).
-                    then((data) => data.data);
+            return fetch(`https://addons.willwang.cloud/getPrice?exchange=${ex.symbol}&symbol=${symbol}`).
+                then((respones) => respones.json()).
+                then((data) => data.data);
         };
 
         globalObject.exchanges[ex.name] = api;
