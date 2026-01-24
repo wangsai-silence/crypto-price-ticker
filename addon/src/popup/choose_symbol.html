@@ -1,18 +1,16 @@
-<header >
-<title> Select Symbol</title>
-<meta charset="utf8" />
-</header>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Select Symbol</title>
+</head>
 <body>
-    <label style="padding: 5px;">All Avail Symbols</label><br>
+  <label style="padding: 5px;">All Avail Symbols</label><br>
 
-    <select id="_exchanges" style="padding: 5px; margin: 10px;">
-    </select>
+  <select id="_exchanges" style="padding: 5px; margin: 10px;"></select>
+  <select id="_symbols" style="padding: 5px; margin: 10px;"></select>
 
-    <select id="_symbols" style="padding: 5px; margin: 10px;">
-    </select>
-
-    <script src="../storage.js"> </script>
-    <script src="../exchanges/proxy.js"> </script>
-    <script src="./query_symbols.js"> </script>
+  <!-- 只需要导入主逻辑文件 -->
+  <script type="module" src="./query_symbols.js"></script>
 </body>
+</html>

@@ -1,60 +1,44 @@
-/* eslint-disable no-unused-vars, no-mixed-operators */
-(function(globalObject) {
-    const store = {};
-    globalObject.storage = store;
+// src/storage/index.js
+const storage = {};
 
-    store.updateExchange = function(exchange) {
-        chrome.storage.local.set({
-            exchange: exchange
-        });
-    };
+/* ======================
+ * 基础封装
+ * ====================== */
+async function setItem(key, value) {
+    return new Promise((resolve) => {
+        chrome.storage.local.set({ [key]: value }, () => resolve());
+    });
+}
 
-    store.getExchange = function() {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get(['exchange'], (res) => {
-                resolve(res.exchange);
-            });
-        });
-    };
+async function getItem(key) {
+    return new Promise((resolve) => {
+        chrome.storage.local.get([key], (res) => resolve(res[key]));
+    });
+}
 
-    store.updateExchangeSymbol = function(exchange, symbol) {
-        obj = {
+/* ======================
+ * 交易所存储 API
+ * ====================== */
+storage.updateExchange = (exchange) => setItem('exchange', exchange);
+storage.getExchange = () => getItem('exchange');
 
-        };
-        obj[`${exchange}_symbol`] = symbol;
+storage.updateExchangeSymbol = (exchange, symbol) =>
+    setItem(`${exchange}_symbol`, symbol);
+storage.getExchangeSymbol = (exchange) =>
+    getItem(`${exchange}_symbol`);
 
-        chrome.storage.local.set(obj);
-    };
+storage.updateExchangeSymbols = (exchange, symbols) =>
+    setItem(`${exchange}_symbols`, symbols); // 存数组
 
-    store.getExchangeSymbol = function(exchange) {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get([`${exchange}_symbol`], (res) => {
-                resolve(res[`${exchange}_symbol`]);
-            });
-        });
-    };
+storage.getExchangeSymbols = async (exchange) => {
+    let symbols = await getItem(`${exchange}_symbols`);
+    if (symbols instanceof String) {
+        symbols = symbols.split(',')
+    }
+    return symbols || [];
+};
 
-    store.updateExchangeSymbols = function(exchange, symbols) {
-        obj = {
-
-        };
-        const key = `${exchange}_symbols`;
-        obj[key] = symbols.join(',');
-        console.log(`update exchange ${exchange} symbols ${symbols}`);
-        chrome.storage.local.set(obj);
-    };
-
-    store.getExchangeSymbols = function(exchange) {
-        return new Promise((resolve, reject) => {
-            const key = `${exchange}_symbols`;
-            chrome.storage.local.get([key], (res) => {
-                if (res[key] === undefined) {
-                    resolve(undefined);
-                    return;
-                }
-
-                resolve(res[key].split(','));
-            });
-        });
-    };
-})(this);
+/* ======================
+ * 导出
+ * ====================== */
+export default storage;

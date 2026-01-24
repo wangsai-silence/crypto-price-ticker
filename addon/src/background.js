@@ -1,140 +1,96 @@
-
 /* eslint-disable no-unused-vars, no-mixed-operators */
-(function (globalObject) {
-    // Easy access to settings
 
-    const storage = globalObject.storage;
-    const api = globalObject.exchanges;
+import './libs/bignumber.min.js';
+import api from './exchanges/proxy.js';
+import storage from './storage.js';
 
-    let current;
+let currentSymbol = null;
 
-    // Formats the price into currency suffixes
-    function formatPrice(price) {
-        var ranges = [
-            { divider: 1e15, suffix: 'Q' },
-            { divider: 1e12, suffix: 'T' },
-            { divider: 1e9, suffix: 'B' },
-            { divider: 1e6, suffix: 'M' },
-            { divider: 1e3, suffix: 'K' }
-        ];
+function formatPrice(price) {
+    const ranges = [
+        { divider: 1e15, suffix: 'Q' },
+        { divider: 1e12, suffix: 'T' },
+        { divider: 1e9, suffix: 'B' },
+        { divider: 1e6, suffix: 'M' },
+        { divider: 1e3, suffix: 'K' }
+    ];
 
-        for (var i = 0; i < ranges.length; i++) {
-            if (price >= ranges[i].divider) {
-                var result = price / ranges[i].divider;
-
-                // Gets the integer part of the price
-                var intResult = parseInt(result, 10);
-
-
-                // Finds the amount of digits the integer part has
-                return (Math.floor(10 * result) / 10).toFixed(1) + ranges[i].suffix;
-                // var integerDigits = Math.floor(Math.log(intResult) * Math.LOG10E + 1);
-                // switch (integerDigits) {
-                //     case 1:
-                //     case 2:
-                //     case 3:
-                //     default:
-                //         return Math.round(result) + ranges[i].suffix;
-                // }
-            }
+    for (const r of ranges) {
+        if (price >= r.divider) {
+            return (Math.floor(10 * price / r.divider) / 10).toFixed(1) + r.suffix;
         }
-
-
-        price = new BigNumber(price).toString(10);
-        if (price.startsWith("0.0")) {
-            price = price.substring(3);
-            while (price.startsWith("0")) {
-                price = price.substring(1);
-            }
-            price = "#" + price;
-        }
-
-        return price;
     }
 
-    function updateBadgeText(price) {
-        console.log(price);
-        var badgeText = formatPrice(price);
-
-        chrome.browserAction.setBadgeText({
-            text: badgeText
-        });
-
-        chrome.browserAction.setTitle({
-            title: String(price)
-        });
+    let p = new BigNumber(price).toString(10);
+    if (p.startsWith('0.0')) {
+        p = '#' + p.replace(/^0\.0+/, '');
     }
+    return p;
+}
 
-    function setupInterval() {
-        window.setInterval(function () {
-            updateBadge();
-        }, 10000);
+function updateBadgeText(price) {
+    const badgeText = formatPrice(price);
+
+    browser.action.setBadgeText({ text: badgeText });
+    browser.action.setTitle({ title: String(price) });
+}
+
+async function updateBadge() {
+    try {
+        if (!currentSymbol) return;
+
+        const ex = await storage.getExchange();
+        const price = await api[ex].getPrice(currentSymbol);
+
+        updateBadgeText(price);
+    } catch (err) {
+        console.error('updateBadge error:', err);
     }
+}
 
+async function initStorage() {
+    try {
+        const ex = await storage.getExchange();
+        const symbol = await storage.getExchangeSymbol(ex);
 
-    function setupBadge() {
-        chrome.browserAction.setBadgeBackgroundColor({
-            color: "#F7931A"
-        });
+        currentSymbol = symbol;
+        updateBadge();
+    } catch (err) {
+        console.warn('storage init failed, using defaults');
 
-        chrome.browserAction.setBadgeText({
-            text: "0.00000"
-        });
-
-        // chrome.browserAction.onClicked.addListener(function (tab) {
-        //     chrome.tabs.create({
-        //         url: 'https://www.huobi.pro'
-        //     });
-        // });
+        await storage.updateExchange('Huobi');
+        await storage.updateExchangeSymbol('Huobi', 'btcusdt');
     }
+}
 
-    function setupStorage() {
-        chrome.storage.onChanged.addListener(onStorageChanged);
-        window.setTimeout(() => {
-            storage.getExchange().then(ex => {
-                if(ex) {
-                    console.log(`current exchange is ${ex}`)
-                    return storage.getExchangeSymbol(ex)
-                }else {
-                    return Promise.reject('undefined exchange')
-                }
-            }).then(symbol => {
-                if(symbol) {
-                    console.log(`current symbol is ${symbol}`)
-                    current = symbol
-                    updateBadge()
-                }else {
-                    return Promise.reject('undefined symbol')
-                }
-            }).catch(err => {
-                console.error(err)
+function setupBadge() {
+    browser.action.setBadgeBackgroundColor({
+        color: '#F7931A'
+    });
 
-                storage.updateExchange('Huobi');
-                storage.updateExchangeSymbol('Huobi', 'btcusdt');
-            })
-        }, 100);
+    browser.action.setBadgeText({
+        text: '0'
+    });
+    browser.action.setBadgeTextColor({ color: '#000000' })
+}
+
+browser.alarms.create('', {
+    periodInMinutes: 0.1 // ≈ 10 秒（Firefox 支持小数）
+});
+
+browser.alarms.onAlarm.addListener(alarm => {
+    updateBadge();
+});
+
+browser.storage.onChanged.addListener(async () => {
+    try {
+        const ex = await storage.getExchange();
+        currentSymbol = await storage.getExchangeSymbol(ex);
+        updateBadge();
+    } catch (e) {
+        console.error(e);
     }
+});
 
-    function onStorageChanged() {
-        storage.getExchange().
-        then((ex) => storage.getExchangeSymbol(ex)).
-        then((symbol) => {
-            console.log('new symbol:', symbol);
-            current = symbol;
-            updateBadge();
-        });
-    }
-
-    function updateBadge() {
-        const symbol = current;
-        console.log(`symbol is: ${symbol}`);
-
-        storage.getExchange().
-        then((ex) => api[ex].getPrice(symbol)).
-        then((price) => updateBadgeText(price));
-    }
-
-    setupBadge();
-    setupStorage();
-    setupInterval();
-})(this);
+setupBadge();
+initStorage();

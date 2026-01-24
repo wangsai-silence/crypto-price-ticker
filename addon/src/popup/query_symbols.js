@@ -1,110 +1,81 @@
-(function(global) {
-    const storage = global.storage;
-    const api = global.exchanges;
+import storage from '../storage.js';
+import exchangesAPI from '../exchanges/proxy.js';
 
-    let currExchange;
+let currExchange;
+let currSymbol;
 
-    function addItems() {
-        const exchanges = Object.keys(api);
+async function addItems() {
+    try {
+        // 填充交易所下拉
+        const exchangeNames = Object.keys(exchangesAPI);
+        const exchangeSelect = document.getElementById('_exchanges');
 
-        for (const exchange of exchanges) {
-            var opt = document.createElement('option');
-            opt.value = exchange;
-            opt.innerHTML = exchange;
-
-            document.getElementById('_exchanges').appendChild(opt);
-        }
-
-        //cur select
-        storage.getExchange().
-        then((ex) => {
-            if (ex === undefined) {
-                return Promise.reject(new Error('no exchange selected'));
-            }
-
-            currExchange = ex;
-
-            const index = exchanges.indexOf(ex);
-            const option = document.getElementById('_exchanges').options[index];
-            if (option !== undefined) {
-                option.selected = true;
-            }
-            return ex;
-        }).
-        then((ex) => storage.getExchangeSymbols(ex)).
-        then((symbols) => {
-            console.log(symbols);
-            if (symbols === undefined) {
-                //request http
-                return api[currExchange].getAllSymbols();
-            }
-
-            return Promise.resolve(symbols);
-        }).
-        then((symbols) => updateSymbolsUI(symbols)).
-        catch(console.error);
-    }
-
-    function updateSymbolsUI(symbols) {
-        const symbolSelect = document.getElementById('_symbols');
-
-        while (symbolSelect.firstChild) {
-            symbolSelect.removeChild(symbolSelect.lastChild);
-        }
-
-        symbols.forEach((symbol) => {
-                    var opt = document.createElement('option');
-                    opt.value = symbol;
-                    opt.innerHTML = symbol;
-
-                    symbolSelect.appendChild(opt);
-                });
-
-        return storage.getExchangeSymbol(currExchange).
-            then((symbol) => Promise.resolve([symbols, symbol])).
-            then(([symbols, symbol]) => {
-                if (symbol === undefined) {
-                    return Promise.reject(new Error('no symbol set'));
-                }
-
-                const index = symbols.indexOf(symbol);
-                const option = symbolSelect.options[index];
-                if (option !== undefined) {
-                    option.selected = true;
-                }
-
-                // currSymbol = symbol;
-            });
-
-    }
-
-    document.addEventListener('DOMContentLoaded', addItems);
-
-    document.getElementById('_exchanges').addEventListener('change', (event) => {
-        const select = event.target;
-        const opt = select.options[select.selectedIndex];
-        console.log('current exchange change to:', opt.value);
-        currExchange = opt.value;
-        storage.updateExchange(currExchange);
-        //update symbols
-
-        api[currExchange].getAllSymbols().
-        then((symbols) => {
-            storage.updateExchangeSymbols(currExchange, symbols);
-            updateSymbolsUI(symbols);
-        });
-    });
-
-    document.getElementById('_symbols').addEventListener('change', (event) => {
-        api[currExchange].getAllSymbols().
-        then((symbols) => {
-            storage.updateExchangeSymbols(currExchange, symbols);
-            updateSymbolsUI(symbols);
+        exchangeNames.forEach((ex) => {
+            const opt = document.createElement('option');
+            opt.value = ex;
+            opt.textContent = ex;
+            exchangeSelect.appendChild(opt);
         });
 
-        const select = event.target;
-        const opt = select.options[select.selectedIndex];
-        console.log('current symbol change to:', opt.value);
-        storage.updateExchangeSymbol(currExchange, opt.value);
+        // 获取当前选中交易所
+        const ex = await storage.getExchange();
+        currExchange = ex || exchangeNames[0]; // 默认第一个交易所
+
+        exchangeSelect.value = currExchange;
+
+        // 获取 symbol 列表
+        let symbols = await storage.getExchangeSymbols(currExchange);
+        if (!symbols.length) {
+            symbols = await exchangesAPI[currExchange].getAllSymbols();
+            await storage.updateExchangeSymbols(currExchange, symbols);
+        }
+
+        await updateSymbolsUI(symbols);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function updateSymbolsUI(symbols) {
+    const symbolSelect = document.getElementById('_symbols');
+    symbolSelect.innerHTML = ''; // 清空
+
+    const fragment = document.createDocumentFragment();
+    symbols.forEach((sym) => {
+        const opt = document.createElement('option');
+        opt.value = sym;
+        opt.textContent = sym;
+        fragment.appendChild(opt);
     });
-})(this);
+    symbolSelect.appendChild(fragment);
+
+    // 设置当前选中 symbol
+    const symbol = await storage.getExchangeSymbol(currExchange);
+    currSymbol = symbol || symbols[0]; // 默认第一个 symbol
+    symbolSelect.value = currSymbol;
+}
+
+document.addEventListener('DOMContentLoaded', addItems);
+
+document.getElementById('_exchanges').addEventListener('change', async (event) => {
+    try {
+        currExchange = event.target.value;
+        await storage.updateExchange(currExchange);
+
+        let symbols = await storage.getExchangeSymbols(currExchange);
+        if (!symbols.length) {
+            symbols = await exchangesAPI[currExchange].getAllSymbols();
+            await storage.updateExchangeSymbols(currExchange, symbols);
+        }
+
+        await updateSymbolsUI(symbols);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+document.getElementById('_symbols').addEventListener('change', async (event) => {
+    currSymbol = event.target.value;
+    await storage.updateExchangeSymbol(currExchange, currSymbol);
+});
